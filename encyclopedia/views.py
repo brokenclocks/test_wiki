@@ -1,19 +1,21 @@
 from django.shortcuts import render
-from .models import Wiki_Page
-from .forms import Wiki_Form
+import markdown2
 from . import util
 
-# how i view main page 
+# how i view main page and connect to the rest 
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
+# view a specific page
+def detail(request , name ):
+    entry = util.get_entry(name)
+    context = markdown2.markdown(entry)
+    return render(request, "encyclopedia/detail.html", {
+        "post": context
+    })
 
-def create_view(request):
-    context = {}
+# make create a page with file system and webform 
 
-    form = Wiki_Form(request.POST or None)
-    if form.is_valid():
-        form.save()
 
-    context['form'] = form
+# function to display random page 
