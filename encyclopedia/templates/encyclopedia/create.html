@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
-<p> {{ form.name_of_field.errors }} </p>
+<p> {% for dict in form_errors %}
+    {{ dict }}
+{% endfor %} </p>
 <div class="col text-center form-group">
     <form action="{% url 'create' %}" method="POST">
     {% csrf_token %}

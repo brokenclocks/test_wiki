@@ -1,4 +1,5 @@
 import markdown2
+import random
 from django.core.exceptions import ValidationError
 from django.shortcuts import render , redirect
 from django.urls import reverse
@@ -16,6 +17,7 @@ def index(request):  # get index page run setup filter function than display con
 
     return render(request, "encyclopedia/index.html", {
         "entries": val_list,
+        "random":random.choice(util.list_entries()),
 
     })
 
@@ -35,7 +37,8 @@ def detail(request, name):  # view a specific page needs argument
     entry = util.get_entry(name)
     context = markdown2.markdown(entry)
     return render(request, "encyclopedia/detail.html", {
-        "post": context
+        "post": context,
+        "random": random.choice(util.list_entries()),
     })
 
 
@@ -47,13 +50,14 @@ def create(request):  # create a markdown page
          title = request.POST.get('title')
          body = request.POST.get('body')
          if util.get_entry(title) != True:
-             raise ValidationError(_('title used'), code=title)
+             raise ValidationError(('title used'), code=title)
          else:
             util.save_entry(title, body)
 
     else:
         form = Wiki_Form()
-    return render(request, 'encyclopedia/create.html', {'form': form})
+    return render(request, 'encyclopedia/create.html', {'form': form,
+                                                        "random":random.choice(util.list_entries()),})
 
 def edit(request): # edit a markdown page
     pass
